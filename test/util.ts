@@ -163,30 +163,31 @@ export const workers = {
     unzlib: wc(fflate, 'unzlibSync'),
     zip: wc(fflate, 'zipSync'),
     unzip: wc(fflate, 'unzipSync')
-  },
-  pako: {
-    deflate: wc('pako', 'deflateRaw'),
-    inflate: wc('pako', 'inflateRaw'),
-    gzip: wc('pako', 'gzip'),
-    gunzip: wc('pako', 'ungzip'),
-    zlib: wc('pako', 'deflate'),
-    unzlib: wc('pako', 'inflate')
-  },
-  uzip: {
-    deflate: wc('uzip', 'deflateRaw'),
-    inflate: wc('uzip', 'inflateRaw')
-  },
-  tinyInflate: {
-    inflate: wc('tiny-inflate')
-  },
-  zlib: {
-    deflate: wc('zlib', 'deflateRawSync'),
-    inflate: wc('zlib', 'inflateRawSync'),
-    gzip: wc('zlib', 'gzipSync'),
-    gunzip: wc('zlib', 'gunzipSync'),
-    zlib: wc('zlib', 'deflateSync'),
-    unzlib: wc('zlib', 'inflateSync')
   }
+  // },
+  // pako: {
+  //   deflate: wc('pako', 'deflateRaw'),
+  //   inflate: wc('pako', 'inflateRaw'),
+  //   gzip: wc('pako', 'gzip'),
+  //   gunzip: wc('pako', 'ungzip'),
+  //   zlib: wc('pako', 'deflate'),
+  //   unzlib: wc('pako', 'inflate')
+  // },
+  // uzip: {
+  //   deflate: wc('uzip', 'deflateRaw'),
+  //   inflate: wc('uzip', 'inflateRaw')
+  // },
+  // tinyInflate: {
+  //   inflate: wc('tiny-inflate')
+  // },
+  // zlib: {
+  //   deflate: wc('zlib', 'deflateRawSync'),
+  //   inflate: wc('zlib', 'inflateRawSync'),
+  //   gzip: wc('zlib', 'gzipSync'),
+  //   gunzip: wc('zlib', 'gunzipSync'),
+  //   zlib: wc('zlib', 'deflateSync'),
+  //   unzlib: wc('zlib', 'inflateSync')
+  // }
 };
 
 export const bClone = (buf: Buffer) => {
