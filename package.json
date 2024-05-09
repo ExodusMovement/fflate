@@ -6,7 +6,7 @@
   "repository": "https://github.com/ExodusMovement/fflate",
   "author": "Exodus Movement, Inc.",
   "license": "MIT",
-  "type":"commonjs",
+  "type":"module",
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rm -rf dist/"
@@ -16,9 +16,5 @@
     "typescript": "^5.2.2",
     "uvu": "^0.3.3"
   },
-  "files": [
-    "!**/README.md",
-    "dist/index.js",
-    "LICENSE"
-  ]
+  "files": ["dist/index.js"]
 }

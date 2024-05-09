@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "moduleResolution": "node",
-    "outDir": "lib/"
+    "declaration": false,
+    "moduleResolution": "nodenext",
+    "module":"nodenext",
+    "outDir": "dist/",
+    "removeComments": true,
+    "target":"ES2019"
   },
-  "include": ["src/*.ts"]
+  "include": ["src/index.ts"]
 }

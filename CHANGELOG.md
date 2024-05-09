@@ -1,3 +1,5 @@
+## exodus-0.8.2
+- remove redundant files and simplify package
 ## 0.8.2
 - Fixed broken UMD build
 - Fixed edge-case causing skipped data during streaming compression
