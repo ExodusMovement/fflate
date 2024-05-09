@@ -1022,7 +1022,7 @@ export type FlateCallback = (err: FlateError | null, data: Uint8Array) => void;
 
 // Walmart object spread
 const mrg = <A, B>(a: A, b: B) => {
-  const o = {} as Record<string, unknown>;
+  const o = Object.create(null) as Record<string, unknown>;
   for (const k in a) o[k] = a[k];
   for (const k in b) o[k] = b[k];
   return o as A & B;
@@ -1245,7 +1245,7 @@ const zls = (d: Uint8Array, dict?: unknown) => {
 function StrmOpt<T, H>(opts: T, cb?: H): T;
 function StrmOpt<T, H>(cb?: H): T;
 function StrmOpt<T, H>(opts?: T | H, cb?: H): T {
-  if (typeof opts == 'function') cb = opts as H, opts = {} as T;
+  if (typeof opts == 'function') cb = opts as H, opts = Object.create(null) as T;
   this.ondata = cb as H;
   return opts as T;
 }
@@ -1459,7 +1459,7 @@ export class Inflate {
   constructor(cb?: FlateStreamHandler);
   constructor(opts?: InflateStreamOptions | FlateStreamHandler, cb?: FlateStreamHandler) {
     // no StrmOpt here to avoid adding to workerizer
-    if (typeof opts == 'function') cb = opts as FlateStreamHandler, opts = {};
+    if (typeof opts == 'function') cb = opts as FlateStreamHandler, opts = Object.create(null);
     this.ondata = cb;
     const dict = opts && (opts as InflateStreamOptions).dictionary && (opts as InflateStreamOptions).dictionary.subarray(-32768);
     this.s = { i: 0, b: dict ? dict.length : 0 };
@@ -2240,7 +2240,7 @@ export class Decompress {
    */
   constructor(cb?: FlateStreamHandler);
   constructor(opts?: InflateStreamOptions | FlateStreamHandler, cb?: FlateStreamHandler) {
-    this.o = StrmOpt.call(this, opts, cb) || {};
+    this.o = StrmOpt.call(this, opts, cb) || Object.create(null);
     this.G = Gunzip;
     this.I = Inflate;
     this.Z = Unzlib;
@@ -3742,13 +3742,13 @@ export type UnzipFileFilter = (file: UnzipFileInfo) => boolean;
  * @returns The decompressed files
  */
 export function unzipSync(data: Uint8Array, opts?: UnzipOptions) {
-  const files: Unzipped = {};
+  const files: Unzipped = Object.create(null);
   let e = data.length - 22;
   for (; b4(data, e) != 0x6054B50; --e) {
     if (!e || data.length - e > 65558) err(13);
   };
   let c = b2(data, e + 8);
-  if (!c) return {};
+  if (!c) return Object.create(null);
   let o = b4(data, e + 16);
   let z = o == 4294967295 || c == 65535;
   if (z) {
