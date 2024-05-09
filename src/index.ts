@@ -115,10 +115,12 @@ for (let i = 280; i < 288; ++i) flt[i] = 8;
 // fixed distance tree
 const fdt = new u8(32);
 for (let i = 0; i < 32; ++i) fdt[i] = 5;
-// fixed length map
-const flm = /*#__PURE__*/ hMap(flt, 9, 0), flrm = /*#__PURE__*/ hMap(flt, 9, 1);
-// fixed distance map
-const fdm = /*#__PURE__*/ hMap(fdt, 5, 0), fdrm = /*#__PURE__*/ hMap(fdt, 5, 1);
+// // fixed length map
+// const flm = /*#__PURE__*/ hMap(flt, 9, 0);
+const flrm = /*#__PURE__*/ hMap(flt, 9, 1);
+// // fixed distance map
+// const fdm = /*#__PURE__*/ hMap(fdt, 5, 0);
+const fdrm = /*#__PURE__*/ hMap(fdt, 5, 1);
 
 // find max of array
 const max = (a: Uint8Array | number[]) => {
@@ -388,22 +390,22 @@ const inflt = (dat: Uint8Array, st: InflateState, buf?: Uint8Array, dict?: Uint8
   return bt != buf.length && noBuf ? slc(buf, 0, bt) : buf.subarray(0, bt);
 }
 
-// starting at p, write the minimum number of bits that can hold v to d
-const wbits = (d: Uint8Array, p: number, v: number) => {
-  v <<= p & 7;
-  const o = (p / 8) | 0;
-  d[o] |= v;
-  d[o + 1] |= v >> 8;
-}
+// // starting at p, write the minimum number of bits that can hold v to d
+// const wbits = (d: Uint8Array, p: number, v: number) => {
+//   v <<= p & 7;
+//   const o = (p / 8) | 0;
+//   d[o] |= v;
+//   d[o + 1] |= v >> 8;
+// }
 
-// starting at p, write the minimum number of bits (>8) that can hold v to d
-const wbits16 = (d: Uint8Array, p: number, v: number) => {
-  v <<= p & 7;
-  const o = (p / 8) | 0;
-  d[o] |= v;
-  d[o + 1] |= v >> 8;
-  d[o + 2] |= v >> 16;
-}
+// // starting at p, write the minimum number of bits (>8) that can hold v to d
+// const wbits16 = (d: Uint8Array, p: number, v: number) => {
+//   v <<= p & 7;
+//   const o = (p / 8) | 0;
+//   d[o] |= v;
+//   d[o + 1] |= v >> 8;
+//   d[o + 2] |= v >> 16;
+// }
 
 type HuffNode = {
   // symbol
@@ -754,52 +756,52 @@ type CRCV = {
   d(): number;
 };
 
-// CRC32 table
-const crct = /*#__PURE__*/ (() => {
-  const t = new Int32Array(256);
-  for (let i = 0; i < 256; ++i) {
-    let c = i, k = 9;
-    while (--k) c = ((c & 1) && -306674912) ^ (c >>> 1);
-    t[i] = c;
-  }
-  return t;
-})();
+// // CRC32 table
+// const crct = /*#__PURE__*/ (() => {
+//   const t = new Int32Array(256);
+//   for (let i = 0; i < 256; ++i) {
+//     let c = i, k = 9;
+//     while (--k) c = ((c & 1) && -306674912) ^ (c >>> 1);
+//     t[i] = c;
+//   }
+//   return t;
+// })();
 
-// CRC32
-const crc = (): CRCV => {
-  let c = -1;
-  return {
-    p(d) {
-      // closures have awful performance
-      let cr = c;
-      for (let i = 0; i < d.length; ++i) cr = crct[(cr & 255) ^ d[i]] ^ (cr >>> 8);
-      c = cr;
-    },
-    d() { return ~c; }
-  }
-}
+// // CRC32
+// const crc = (): CRCV => {
+//   let c = -1;
+//   return {
+//     p(d) {
+//       // closures have awful performance
+//       let cr = c;
+//       for (let i = 0; i < d.length; ++i) cr = crct[(cr & 255) ^ d[i]] ^ (cr >>> 8);
+//       c = cr;
+//     },
+//     d() { return ~c; }
+//   }
+// }
 
-// Adler32
-const adler = (): CRCV => {
-  let a = 1, b = 0;
-  return {
-    p(d) {
-      // closures have awful performance
-      let n = a, m = b;
-      const l = d.length | 0;
-      for (let i = 0; i != l;) {
-        const e = Math.min(i + 2655, l);
-        for (; i < e; ++i) m += n += d[i];
-        n = (n & 65535) + 15 * (n >> 16), m = (m & 65535) + 15 * (m >> 16);
-      }
-      a = n, b = m;
-    },
-    d() {
-      a %= 65521, b %= 65521;
-      return (a & 255) << 24 | (a & 0xFF00) << 8 | (b & 255) << 8 | (b >> 8);
-    }
-  }
-}
+// // Adler32
+// const adler = (): CRCV => {
+//   let a = 1, b = 0;
+//   return {
+//     p(d) {
+//       // closures have awful performance
+//       let n = a, m = b;
+//       const l = d.length | 0;
+//       for (let i = 0; i != l;) {
+//         const e = Math.min(i + 2655, l);
+//         for (; i < e; ++i) m += n += d[i];
+//         n = (n & 65535) + 15 * (n >> 16), m = (m & 65535) + 15 * (m >> 16);
+//       }
+//       a = n, b = m;
+//     },
+//     d() {
+//       a %= 65521, b %= 65521;
+//       return (a & 255) << 24 | (a & 0xFF00) << 8 | (b & 255) << 8 | (b >> 8);
+//     }
+//   }
+// }
 
 /**
  * Options for decompressing a DEFLATE stream
@@ -1091,20 +1093,20 @@ const mrg = <A, B>(a: A, b: B) => {
 // }
 
 // base async inflate fn
-const bInflt = () => [u8, u16, i32, fleb, fdeb, clim, fl, fd, flrm, fdrm, rev, ec, hMap, max, bits, bits16, shft, slc, err, inflt, inflateSync, pbf,];
+// const bInflt = () => [u8, u16, i32, fleb, fdeb, clim, fl, fd, flrm, fdrm, rev, ec, hMap, max, bits, bits16, shft, slc, err, inflt, inflateSync, pbf,];
 // const bDflt = () => [u8, u16, i32, fleb, fdeb, clim, revfl, revfd, flm, flt, fdm, fdt, rev, deo, et, hMap, wbits, wbits16, hTree, ln, lc, clen, wfblk, wblk, shft, slc, dflt, dopt, deflateSync, pbf];
 
-// gzip extra
-const gze = () => [gzh, gzhl, wbytes, crc, crct];
-// gunzip extra
-const guze = () => [gzs, gzl];
-// zlib extra
-const zle = () => [zlh, wbytes, adler];
-// unzlib extra
-const zule = () => [zls];
+// // gzip extra
+// const gze = () => [gzh, gzhl, wbytes, crc, crct];
+// // gunzip extra
+// const guze = () => [gzs, gzl];
+// // zlib extra
+// const zle = () => [zlh, wbytes, adler];
+// // unzlib extra
+// const zule = () => [zls];
 
-// post buf
-const pbf = (msg: Uint8Array) => (postMessage as Worker['postMessage'])(msg, [msg.buffer]);
+// // post buf
+// const pbf = (msg: Uint8Array) => (postMessage as Worker['postMessage'])(msg, [msg.buffer]);
 
 // // get opts
 // const gopt = (o?: AsyncInflateOptions) => o && {
@@ -1183,21 +1185,21 @@ const b4 = (d: Uint8Array, b: number) => (d[b] | (d[b + 1] << 8) | (d[b + 2] << 
 
 const b8 = (d: Uint8Array, b: number) => b4(d, b) + (b4(d, b + 4) * 4294967296);
 
-// write bytes
-const wbytes = (d: Uint8Array, b: number, v: number) => {
-  for (; v; ++b) d[b] = v, v >>>= 8;
-}
+// // write bytes
+// const wbytes = (d: Uint8Array, b: number, v: number) => {
+//   for (; v; ++b) d[b] = v, v >>>= 8;
+// }
 
-// gzip header
-const gzh = (c: Uint8Array, o: GzipOptions) => {
-  const fn = o.filename;
-  c[0] = 31, c[1] = 139, c[2] = 8, c[8] = o.level < 2 ? 4 : o.level == 9 ? 2 : 0, c[9] = 3; // assume Unix
-  if (o.mtime != 0) wbytes(c, 4, Math.floor((new Date(o.mtime as (string | number) || Date.now()) as unknown as number) / 1000));
-  if (fn) {
-    c[3] = 8;
-    for (let i = 0; i <= fn.length; ++i) c[i + 10] = fn.charCodeAt(i);
-  }
-}
+// // gzip header
+// const gzh = (c: Uint8Array, o: GzipOptions) => {
+//   const fn = o.filename;
+//   c[0] = 31, c[1] = 139, c[2] = 8, c[8] = o.level < 2 ? 4 : o.level == 9 ? 2 : 0, c[9] = 3; // assume Unix
+//   if (o.mtime != 0) wbytes(c, 4, Math.floor((new Date(o.mtime as (string | number) || Date.now()) as unknown as number) / 1000));
+//   if (fn) {
+//     c[3] = 8;
+//     for (let i = 0; i <= fn.length; ++i) c[i + 10] = fn.charCodeAt(i);
+//   }
+// }
 
 // gzip footer: -8 to -4 = CRC, -4 to -0 is length
 
@@ -1217,20 +1219,20 @@ const gzl = (d: Uint8Array) => {
   return (d[l - 4] | d[l - 3] << 8 | d[l - 2] << 16 | d[l - 1] << 24) >>> 0;
 }
 
-// gzip header length
-const gzhl = (o: GzipOptions) => 10 + (o.filename ? o.filename.length + 1 : 0);
+// // gzip header length
+// const gzhl = (o: GzipOptions) => 10 + (o.filename ? o.filename.length + 1 : 0);
 
-// zlib header
-const zlh = (c: Uint8Array, o: ZlibOptions) => {
-  const lv = o.level, fl = lv == 0 ? 0 : lv < 6 ? 1 : lv == 9 ? 3 : 2;
-  c[0] = 120, c[1] = (fl << 6) | (o.dictionary && 32);
-  c[1] |= 31 - ((c[0] << 8) | c[1]) % 31;
-  if (o.dictionary) {
-    const h = adler();
-    h.p(o.dictionary);
-    wbytes(c, 2, h.d());
-  }
-}
+// // zlib header
+// const zlh = (c: Uint8Array, o: ZlibOptions) => {
+//   const lv = o.level, fl = lv == 0 ? 0 : lv < 6 ? 1 : lv == 9 ? 3 : 2;
+//   c[0] = 120, c[1] = (fl << 6) | (o.dictionary && 32);
+//   c[1] |= 31 - ((c[0] << 8) | c[1]) % 31;
+//   if (o.dictionary) {
+//     const h = adler();
+//     h.p(o.dictionary);
+//     wbytes(c, 2, h.d());
+//   }
+// }
 
 // zlib start
 const zls = (d: Uint8Array, dict?: unknown) => {
@@ -2695,8 +2697,8 @@ export function strFromU8(dat: Uint8Array, latin1?: boolean) {
   } 
 };
 
-// deflate bit flag
-const dbf = (l: number) => l == 1 ? 3 : l < 6 ? 2 : l == 9 ? 1 : 0;
+// // deflate bit flag
+// const dbf = (l: number) => l == 1 ? 3 : l < 6 ? 2 : l == 9 ? 1 : 0;
 
 // skip local zip header
 const slzh = (d: Uint8Array, b: number) => b + 30 + b2(d, b + 26) + b2(d, b + 28);
@@ -3644,7 +3646,7 @@ export type UnzipFileFilter = (file: UnzipFileInfo) => boolean;
 //   onfile: UnzipFileHandler;
 // }
 
-const mt = typeof queueMicrotask == 'function' ? queueMicrotask : typeof setTimeout == 'function' ? setTimeout : (fn: Function) => { fn(); };
+// const mt = typeof queueMicrotask == 'function' ? queueMicrotask : typeof setTimeout == 'function' ? setTimeout : (fn: Function) => { fn(); };
 
 
 // /**
