@@ -1,6 +1,6 @@
 {
   "name": "@exodus/fflate",
-  "version": "0.8.2-rc.0",
+  "version": "0.8.2",
   "description": "Simplified clone of fflate: high performance decompression package",
   "main": "./dist/index.js",
   "repository": "https://github.com/ExodusMovement/fflate",

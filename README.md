@@ -1,4 +1,8 @@
 # fflate
+
+> [!WARNING]  
+> Every usage of this library must be approved by the AppSec department.
+
 High performance decompression clone of `fflate`.
 
 

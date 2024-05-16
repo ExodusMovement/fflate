@@ -611,7 +611,7 @@ const ln = (n: HuffNode, l: Uint16Array, d: number): number => {
 // const deo = /*#__PURE__*/ new i32([65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632]);
 
 // empty
-const et = /*#__PURE__*/new u8(0);
+// const et = /*#__PURE__*/new u8(0);
 
 // type DeflateState = {
 //   // head
@@ -750,11 +750,11 @@ const et = /*#__PURE__*/new u8(0);
 //   return slc(o, 0, pre + shft(pos) + post);
 // }
 
-// crc check
-type CRCV = {
-  p(d: Uint8Array): void;
-  d(): number;
-};
+// // crc check
+// type CRCV = {
+//   p(d: Uint8Array): void;
+//   d(): number;
+// };
 
 // // CRC32 table
 // const crct = /*#__PURE__*/ (() => {
@@ -1020,13 +1020,13 @@ export type FlateCallback = (err: FlateError | null, data: Uint8Array) => void;
 // }
   
 
-// Walmart object spread
-const mrg = <A, B>(a: A, b: B) => {
-  const o = Object.create(null) as Record<string, unknown>;
-  for (const k in a) o[k] = a[k];
-  for (const k in b) o[k] = b[k];
-  return o as A & B;
-}
+// // Walmart object spread
+// const mrg = <A, B>(a: A, b: B) => {
+//   const o = Object.create(null) as Record<string, unknown>;
+//   for (const k in a) o[k] = a[k];
+//   for (const k in b) o[k] = b[k];
+//   return o as A & B;
+// }
 
 // // worker clone
 
@@ -1178,12 +1178,12 @@ const mrg = <A, B>(a: A, b: B) => {
 // }
 
 // read 2 bytes
-const b2 = (d: Uint8Array, b: number) => d[b] | (d[b + 1] << 8);
+// const b2 = (d: Uint8Array, b: number) => d[b] | (d[b + 1] << 8);
 
 // read 4 bytes
-const b4 = (d: Uint8Array, b: number) => (d[b] | (d[b + 1] << 8) | (d[b + 2] << 16) | (d[b + 3] << 24)) >>> 0;
+// const b4 = (d: Uint8Array, b: number) => (d[b] | (d[b + 1] << 8) | (d[b + 2] << 16) | (d[b + 3] << 24)) >>> 0;
 
-const b8 = (d: Uint8Array, b: number) => b4(d, b) + (b4(d, b + 4) * 4294967296);
+// const b8 = (d: Uint8Array, b: number) => b4(d, b) + (b4(d, b + 4) * 4294967296);
 
 // // write bytes
 // const wbytes = (d: Uint8Array, b: number, v: number) => {
@@ -2519,202 +2519,202 @@ export type UnzipCallback = (err: FlateError | null, data: Unzipped) => void;
 // export type UnzipFileHandler = (file: UnzipFile) => void;
 
 // flattened Zippable
-type FlatZippable<A extends boolean> = Record<string, [Uint8Array, ZipOptions]>;
+// type FlatZippable<A extends boolean> = Record<string, [Uint8Array, ZipOptions]>;
 
-// flatten a directory structure
-const fltn = <A extends boolean, D = Zippable>(d: D, p: string, t: FlatZippable<A>, o: ZipOptions) => {
-  for (const k in d) {
-    let val = d[k], n = p + k, op = o;
-    if (Array.isArray(val)) op = mrg(o, val[1]), val = val[0] as unknown as D[Extract<keyof D, string>];
-    if (val instanceof u8) t[n] = [val, op] as unknown as FlatZippable<A>[string];
-    else {
-      t[n += '/'] = [new u8(0), op] as unknown as FlatZippable<A>[string];
-      fltn(val as unknown as Zippable, n, t, o);
-    }
-  }
-}
+// // flatten a directory structure
+// const fltn = <A extends boolean, D = Zippable>(d: D, p: string, t: FlatZippable<A>, o: ZipOptions) => {
+//   for (const k in d) {
+//     let val = d[k], n = p + k, op = o;
+//     if (Array.isArray(val)) op = mrg(o, val[1]), val = val[0] as unknown as D[Extract<keyof D, string>];
+//     if (val instanceof u8) t[n] = [val, op] as unknown as FlatZippable<A>[string];
+//     else {
+//       t[n += '/'] = [new u8(0), op] as unknown as FlatZippable<A>[string];
+//       fltn(val as unknown as Zippable, n, t, o);
+//     }
+//   }
+// }
 
 // text encoder
-const te = typeof TextEncoder != 'undefined' && /*#__PURE__*/ new TextEncoder();
+// const te = typeof TextEncoder != 'undefined' && /*#__PURE__*/ new TextEncoder();
 // text decoder
-const td = typeof TextDecoder != 'undefined' && /*#__PURE__*/ new TextDecoder();
+// const td = typeof TextDecoder != 'undefined' && /*#__PURE__*/ new TextDecoder();
 // text decoder stream
-let tds = 0;
-try {
-  td.decode(et, { stream: true });
-  tds = 1;
-} catch(e) {}
+// let tds = 0;
+// try {
+//   td.decode(et, { stream: true });
+//   tds = 1;
+// } catch(e) {}
 
 // decode UTF8
-const dutf8 = (d: Uint8Array) => {
-  for (let r = '', i = 0;;) {
-    let c = d[i++];
-    const eb = ((c > 127) as unknown as number) + ((c > 223) as unknown as number) + ((c > 239) as unknown as number);
-    if (i + eb > d.length) return { s: r, r: slc(d, i - 1) };
-    if (!eb) r += String.fromCharCode(c)
-    else if (eb == 3) {
-      c = ((c & 15) << 18 | (d[i++] & 63) << 12 | (d[i++] & 63) << 6 | (d[i++] & 63)) - 65536,
-      r += String.fromCharCode(55296 | (c >> 10), 56320 | (c & 1023));
-    } else if (eb & 1) r += String.fromCharCode((c & 31) << 6 | (d[i++] & 63));
-    else r += String.fromCharCode((c & 15) << 12 | (d[i++] & 63) << 6 | (d[i++] & 63));
-  }
-}
+// const dutf8 = (d: Uint8Array) => {
+//   for (let r = '', i = 0;;) {
+//     let c = d[i++];
+//     const eb = ((c > 127) as unknown as number) + ((c > 223) as unknown as number) + ((c > 239) as unknown as number);
+//     if (i + eb > d.length) return { s: r, r: slc(d, i - 1) };
+//     if (!eb) r += String.fromCharCode(c)
+//     else if (eb == 3) {
+//       c = ((c & 15) << 18 | (d[i++] & 63) << 12 | (d[i++] & 63) << 6 | (d[i++] & 63)) - 65536,
+//       r += String.fromCharCode(55296 | (c >> 10), 56320 | (c & 1023));
+//     } else if (eb & 1) r += String.fromCharCode((c & 31) << 6 | (d[i++] & 63));
+//     else r += String.fromCharCode((c & 15) << 12 | (d[i++] & 63) << 6 | (d[i++] & 63));
+//   }
+// }
 
-/**
- * Streaming UTF-8 decoding
- */
-export class DecodeUTF8 {
-  private p: Uint8Array;
-  private t: TextDecoder;
-  /**
-   * Creates a UTF-8 decoding stream
-   * @param cb The callback to call whenever data is decoded
-   */
-  constructor(cb?: StringStreamHandler) {
-    this.ondata = cb;
-    if (tds) this.t = new TextDecoder();
-    else this.p = et;
-  }
+// /**
+//  * Streaming UTF-8 decoding
+//  */
+// export class DecodeUTF8 {
+//   private p: Uint8Array;
+//   private t: TextDecoder;
+//   /**
+//    * Creates a UTF-8 decoding stream
+//    * @param cb The callback to call whenever data is decoded
+//    */
+//   constructor(cb?: StringStreamHandler) {
+//     this.ondata = cb;
+//     if (tds) this.t = new TextDecoder();
+//     else this.p = et;
+//   }
 
-  /**
-   * Pushes a chunk to be decoded from UTF-8 binary
-   * @param chunk The chunk to push
-   * @param final Whether this is the last chunk
-   */
-  push(chunk: Uint8Array, final?: boolean) {
-    if (!this.ondata) err(5);
-    final = !!final;
-    if (this.t) {
-      this.ondata(this.t.decode(chunk, { stream: true }), final);
-      if (final) {
-        if (this.t.decode().length) err(8);
-        this.t = null;
-      }
-      return;
-    }
-    if (!this.p) err(4);
-    const dat = new u8(this.p.length + chunk.length);
-    dat.set(this.p);
-    dat.set(chunk, this.p.length);
-    const { s, r } = dutf8(dat);
-    if (final) {
-      if (r.length) err(8);
-      this.p = null;
-    } else this.p = r;
-    this.ondata(s, final);
-  }
+//   /**
+//    * Pushes a chunk to be decoded from UTF-8 binary
+//    * @param chunk The chunk to push
+//    * @param final Whether this is the last chunk
+//    */
+//   push(chunk: Uint8Array, final?: boolean) {
+//     if (!this.ondata) err(5);
+//     final = !!final;
+//     if (this.t) {
+//       this.ondata(this.t.decode(chunk, { stream: true }), final);
+//       if (final) {
+//         if (this.t.decode().length) err(8);
+//         this.t = null;
+//       }
+//       return;
+//     }
+//     if (!this.p) err(4);
+//     const dat = new u8(this.p.length + chunk.length);
+//     dat.set(this.p);
+//     dat.set(chunk, this.p.length);
+//     const { s, r } = dutf8(dat);
+//     if (final) {
+//       if (r.length) err(8);
+//       this.p = null;
+//     } else this.p = r;
+//     this.ondata(s, final);
+//   }
 
-  /**
-   * The handler to call whenever data is available
-   */
-  ondata: StringStreamHandler;
-}
+//   /**
+//    * The handler to call whenever data is available
+//    */
+//   ondata: StringStreamHandler;
+// }
 
-/**
- * Streaming UTF-8 encoding
- */
-export class EncodeUTF8 {
-  private d: boolean;
-  /**
-   * Creates a UTF-8 decoding stream
-   * @param cb The callback to call whenever data is encoded
-   */
-  constructor(cb?: FlateStreamHandler) {
-    this.ondata = cb;
-  }
+// /**
+//  * Streaming UTF-8 encoding
+//  */
+// export class EncodeUTF8 {
+//   private d: boolean;
+//   /**
+//    * Creates a UTF-8 decoding stream
+//    * @param cb The callback to call whenever data is encoded
+//    */
+//   constructor(cb?: FlateStreamHandler) {
+//     this.ondata = cb;
+//   }
 
-  /**
-   * Pushes a chunk to be encoded to UTF-8
-   * @param chunk The string data to push
-   * @param final Whether this is the last chunk
-   */
-  push(chunk: string, final?: boolean) {
-    if (!this.ondata) err(5);
-    if (this.d) err(4);
-    this.ondata(strToU8(chunk), this.d = final || false);
-  }
+//   /**
+//    * Pushes a chunk to be encoded to UTF-8
+//    * @param chunk The string data to push
+//    * @param final Whether this is the last chunk
+//    */
+//   push(chunk: string, final?: boolean) {
+//     if (!this.ondata) err(5);
+//     if (this.d) err(4);
+//     this.ondata(strToU8(chunk), this.d = final || false);
+//   }
 
-  /**
-   * The handler to call whenever data is available
-   */
-  ondata: FlateStreamHandler;
-}
+//   /**
+//    * The handler to call whenever data is available
+//    */
+//   ondata: FlateStreamHandler;
+// }
 
-/**
- * Converts a string into a Uint8Array for use with compression/decompression methods
- * @param str The string to encode
- * @param latin1 Whether or not to interpret the data as Latin-1. This should
- *               not need to be true unless decoding a binary string.
- * @returns The string encoded in UTF-8/Latin-1 binary
- */
-export function strToU8(str: string, latin1?: boolean): Uint8Array {
-  if (latin1) {
-    const ar = new u8(str.length);
-    for (let i = 0; i < str.length; ++i) ar[i] = str.charCodeAt(i);
-    return ar;
-  }
-  if (te) return te.encode(str);
-  const l = str.length;
-  let ar = new u8(str.length + (str.length >> 1));
-  let ai = 0;
-  const w = (v: number) => { ar[ai++] = v; };
-  for (let i = 0; i < l; ++i) {
-    if (ai + 5 > ar.length) {
-      const n = new u8(ai + 8 + ((l - i) << 1));
-      n.set(ar);
-      ar = n;
-    }
-    let c = str.charCodeAt(i);
-    if (c < 128 || latin1) w(c);
-    else if (c < 2048) w(192 | (c >> 6)), w(128 | (c & 63));
-    else if (c > 55295 && c < 57344)
-      c = 65536 + (c & 1023 << 10) | (str.charCodeAt(++i) & 1023),
-      w(240 | (c >> 18)), w(128 | ((c >> 12) & 63)), w(128 | ((c >> 6) & 63)), w(128 | (c & 63));
-    else w(224 | (c >> 12)), w(128 | ((c >> 6) & 63)), w(128 | (c & 63));
-  }
-  return slc(ar, 0, ai);
-}
+// /**
+//  * Converts a string into a Uint8Array for use with compression/decompression methods
+//  * @param str The string to encode
+//  * @param latin1 Whether or not to interpret the data as Latin-1. This should
+//  *               not need to be true unless decoding a binary string.
+//  * @returns The string encoded in UTF-8/Latin-1 binary
+//  */
+// export function strToU8(str: string, latin1?: boolean): Uint8Array {
+//   if (latin1) {
+//     const ar = new u8(str.length);
+//     for (let i = 0; i < str.length; ++i) ar[i] = str.charCodeAt(i);
+//     return ar;
+//   }
+//   if (te) return te.encode(str);
+//   const l = str.length;
+//   let ar = new u8(str.length + (str.length >> 1));
+//   let ai = 0;
+//   const w = (v: number) => { ar[ai++] = v; };
+//   for (let i = 0; i < l; ++i) {
+//     if (ai + 5 > ar.length) {
+//       const n = new u8(ai + 8 + ((l - i) << 1));
+//       n.set(ar);
+//       ar = n;
+//     }
+//     let c = str.charCodeAt(i);
+//     if (c < 128 || latin1) w(c);
+//     else if (c < 2048) w(192 | (c >> 6)), w(128 | (c & 63));
+//     else if (c > 55295 && c < 57344)
+//       c = 65536 + (c & 1023 << 10) | (str.charCodeAt(++i) & 1023),
+//       w(240 | (c >> 18)), w(128 | ((c >> 12) & 63)), w(128 | ((c >> 6) & 63)), w(128 | (c & 63));
+//     else w(224 | (c >> 12)), w(128 | ((c >> 6) & 63)), w(128 | (c & 63));
+//   }
+//   return slc(ar, 0, ai);
+// }
 
-/**
- * Converts a Uint8Array to a string
- * @param dat The data to decode to string
- * @param latin1 Whether or not to interpret the data as Latin-1. This should
- *               not need to be true unless encoding to binary string.
- * @returns The original UTF-8/Latin-1 string
- */
-export function strFromU8(dat: Uint8Array, latin1?: boolean) {
-  if (latin1) {
-    let r = '';
-    for (let i = 0; i < dat.length; i += 16384)
-      r += String.fromCharCode.apply(null, dat.subarray(i, i + 16384));
-    return r;
-  } else if (td) {
-    return td.decode(dat)
-  } else {
-    const { s, r } = dutf8(dat);
-    if (r.length) err(8);
-    return s;
-  } 
-};
+// /**
+//  * Converts a Uint8Array to a string
+//  * @param dat The data to decode to string
+//  * @param latin1 Whether or not to interpret the data as Latin-1. This should
+//  *               not need to be true unless encoding to binary string.
+//  * @returns The original UTF-8/Latin-1 string
+//  */
+// export function strFromU8(dat: Uint8Array, latin1?: boolean) {
+//   if (latin1) {
+//     let r = '';
+//     for (let i = 0; i < dat.length; i += 16384)
+//       r += String.fromCharCode.apply(null, dat.subarray(i, i + 16384));
+//     return r;
+//   } else if (td) {
+//     return td.decode(dat)
+//   } else {
+//     const { s, r } = dutf8(dat);
+//     if (r.length) err(8);
+//     return s;
+//   } 
+// };
 
 // // deflate bit flag
 // const dbf = (l: number) => l == 1 ? 3 : l < 6 ? 2 : l == 9 ? 1 : 0;
 
 // skip local zip header
-const slzh = (d: Uint8Array, b: number) => b + 30 + b2(d, b + 26) + b2(d, b + 28);
+// const slzh = (d: Uint8Array, b: number) => b + 30 + b2(d, b + 26) + b2(d, b + 28);
 
-// read zip header
-const zh = (d: Uint8Array, b: number, z: boolean) => {
-  const fnl = b2(d, b + 28), fn = strFromU8(d.subarray(b + 46, b + 46 + fnl), !(b2(d, b + 8) & 2048)), es = b + 46 + fnl, bs = b4(d, b + 20);
-  const [sc, su, off] = z && bs == 4294967295 ? z64e(d, es) : [bs, b4(d, b + 24), b4(d, b + 42)];
-  return [b2(d, b + 10), sc, su, fn, es + b2(d, b + 30) + b2(d, b + 32), off] as const;
-}
+// // read zip header
+// const zh = (d: Uint8Array, b: number, z: boolean) => {
+//   const fnl = b2(d, b + 28), fn = strFromU8(d.subarray(b + 46, b + 46 + fnl), !(b2(d, b + 8) & 2048)), es = b + 46 + fnl, bs = b4(d, b + 20);
+//   const [sc, su, off] = z && bs == 4294967295 ? z64e(d, es) : [bs, b4(d, b + 24), b4(d, b + 42)];
+//   return [b2(d, b + 10), sc, su, fn, es + b2(d, b + 30) + b2(d, b + 32), off] as const;
+// }
 
-// read zip64 extra field
-const z64e = (d: Uint8Array, b: number) => {
-  for (; b2(d, b) != 1; b += 4 + b2(d, b + 2));
-  return [b8(d, b + 12), b8(d, b + 4), b8(d, b + 20)] as const;
-}
+// // read zip64 extra field
+// const z64e = (d: Uint8Array, b: number) => {
+//   for (; b2(d, b) != 1; b += 4 + b2(d, b + 2));
+//   return [b8(d, b + 12), b8(d, b + 4), b8(d, b + 20)] as const;
+// }
 
 // zip header file
 // type ZHF = Omit<ZipInputFile, 'terminate' | 'ondata' | 'filename'>;
@@ -3734,45 +3734,45 @@ export type UnzipFileFilter = (file: UnzipFileInfo) => boolean;
 //   return tAll;
 // }
 
-/**
- * Synchronously decompresses a ZIP archive. Prefer using `unzip` for better
- * performance with more than one file.
- * @param data The raw compressed ZIP file
- * @param opts The ZIP extraction options
- * @returns The decompressed files
- */
-export function unzipSync(data: Uint8Array, opts?: UnzipOptions) {
-  const files: Unzipped = Object.create(null);
-  let e = data.length - 22;
-  for (; b4(data, e) != 0x6054B50; --e) {
-    if (!e || data.length - e > 65558) err(13);
-  };
-  let c = b2(data, e + 8);
-  if (!c) return Object.create(null);
-  let o = b4(data, e + 16);
-  let z = o == 4294967295 || c == 65535;
-  if (z) {
-    let ze = b4(data, e - 12);
-    z = b4(data, ze) == 0x6064B50;
-    if (z) {
-      c = b4(data, ze + 32);
-      o = b4(data, ze + 48);
-    }
-  }
-  const fltr = opts && opts.filter;
-  for (let i = 0; i < c; ++i) {
-    const [c, sc, su, fn, no, off] = zh(data, o, z), b = slzh(data, off);
-    o = no;
-    if (!fltr || fltr({
-      name: fn,
-      size: sc,
-      originalSize: su,
-      compression: c
-    })) {
-      if (!c) files[fn] = slc(data, b, b + sc);
-      else if (c == 8) files[fn] = inflateSync(data.subarray(b, b + sc), { out: new u8(su) });
-      else err(14, 'unknown compression type ' + c);
-    }
-  }
-  return files;
-}
+// /**
+//  * Synchronously decompresses a ZIP archive. Prefer using `unzip` for better
+//  * performance with more than one file.
+//  * @param data The raw compressed ZIP file
+//  * @param opts The ZIP extraction options
+//  * @returns The decompressed files
+//  */
+// export function unzipSync(data: Uint8Array, opts?: UnzipOptions) {
+//   const files: Unzipped = Object.create(null);
+//   let e = data.length - 22;
+//   for (; b4(data, e) != 0x6054B50; --e) {
+//     if (!e || data.length - e > 65558) err(13);
+//   };
+//   let c = b2(data, e + 8);
+//   if (!c) return Object.create(null);
+//   let o = b4(data, e + 16);
+//   let z = o == 4294967295 || c == 65535;
+//   if (z) {
+//     let ze = b4(data, e - 12);
+//     z = b4(data, ze) == 0x6064B50;
+//     if (z) {
+//       c = b4(data, ze + 32);
+//       o = b4(data, ze + 48);
+//     }
+//   }
+//   const fltr = opts && opts.filter;
+//   for (let i = 0; i < c; ++i) {
+//     const [c, sc, su, fn, no, off] = zh(data, o, z), b = slzh(data, off);
+//     o = no;
+//     if (!fltr || fltr({
+//       name: fn,
+//       size: sc,
+//       originalSize: su,
+//       compression: c
+//     })) {
+//       if (!c) files[fn] = slc(data, b, b + sc);
+//       else if (c == 8) files[fn] = inflateSync(data.subarray(b, b + sc), { out: new u8(su) });
+//       else err(14, 'unknown compression type ' + c);
+//     }
+//   }
+//   return files;
+// }
